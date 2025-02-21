@@ -2,17 +2,12 @@
  
   "headers": [
     {
-      "source": "/Songs/:path*",
+      "source": "/Songs/(.*)",
       "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Content-Type",
-          "value": "audio/mpeg"
-        }
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Content-Type", "value": "audio/mpeg" }
       ]
     }
   ]
 }
+
