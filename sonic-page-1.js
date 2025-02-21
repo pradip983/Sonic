@@ -73,9 +73,9 @@ async function displayalbums() {
                 cardcontainer.innerHTML = cardcontainer.innerHTML + `
                     <div data-folder="${Folder}" class="card">
                         <div class="play">
-                            <img src="/play-button.svg" alt="">
+                            <img src="image/play-button.svg" alt="">
                         </div>
-                        <img src="Songs/${Folder}/cover.jpg" alt="">
+                        <img src="image/Songs/${Folder}/cover.jpg" alt="">
                         <h4>${response.title}</h4>
                         <p>${response.description}</p>
                     </div>`
@@ -108,7 +108,7 @@ function populateSongList() {
             <div class="musicbox">
                 <div class="songicon invert">
                     <div>
-                        <img src="/music.svg" alt="">
+                        <img src="image/music.svg" alt="">
                     </div>
                 </div>
                 <div class="songinfo">
@@ -116,7 +116,7 @@ function populateSongList() {
                 </div>
                 <div class="playnow ">
                     <span>play now</span>
-                    <span><img src="/play.svg" class="invert1" alt=""></span>
+                    <span><img src="image/play.svg" class="invert1" alt=""></span>
                 </div>
             </div>
         </li>`;
