@@ -330,7 +330,7 @@
 
 @media (max-width: 1450px) {
     body {
-        background-image: url(/image/background-img.png);
+        background-image: url(image/background-img.png);
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: 100% 100%;
