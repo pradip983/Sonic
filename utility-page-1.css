@@ -41,10 +41,10 @@
     border: 2px solid black;
     border-radius: 7px;
 }
-.left footer:hover{
+/* .left footer:hover{
     border: 2px solid black;
     border-radius: 7px;
-}
+} */
 .home{
     color: white;
 }
@@ -55,6 +55,7 @@
 }
 .library{
     color: white;
+    
 }
 
 .box2 {
