@@ -23,7 +23,7 @@ function secondsToMinutes(seconds) {
 async function getSongs(folder) {
     currfolder = folder;
     try {
-        let a = await fetch(`/Songs/${folder}`)
+        let a = await fetch(`Songs/${folder}`)
         let response = await a.text();
         let div = document.createElement("div")
         div.innerHTML = response;
@@ -45,7 +45,7 @@ async function getSongs(folder) {
 
 const playMusic = (track, pause = false) => {
     console.log("Playing music:", track);  // Debugging
-    currentSong.src = `/Songs/${currfolder}/` + track
+    currentSong.src = `Songs/${currfolder}/` + track
     if (pause != true) {
         currentSong.play();
         play.src = "image/pause.svg"
@@ -57,7 +57,7 @@ const playMusic = (track, pause = false) => {
 
 async function displayalbums() {
     try {
-        let a = await fetch(`/Songs/`);
+        let a = await fetch(`Songs/`);
         let response = await a.text();
         console.log(response);
         let div = document.createElement("div")
@@ -68,14 +68,14 @@ async function displayalbums() {
             const e = anchor[i];
             if (e.href.includes("Songs/") && !e.href.includes(".htaccess")) {
                 let Folder = e.href.split("Songs/")[1];
-                let a = await fetch(`/Songs/${Folder}/zinfo.json`);
+                let a = await fetch(`Songs/${Folder}/zinfo.json`);
                 let response = await a.json();
                 cardcontainer.innerHTML = cardcontainer.innerHTML + `
                     <div data-folder="${Folder}" class="card">
                         <div class="play">
                             <img src="image/play-button.svg" alt="">
                         </div>
-                        <img src="/Songs/${Folder}/cover.jpg" alt="">
+                        <img src="Songs/${Folder}/cover.jpg" alt="">
                         <h4>${response.title}</h4>
                         <p>${response.description}</p>
                     </div>`
@@ -176,14 +176,14 @@ function attachPlaybackControlEvents() {
     })
 
     pre.addEventListener("click", () => {
-        let index = songs.indexOf(currentSong.src.split(`/Songs/${currfolder}/`)[1])
+        let index = songs.indexOf(currentSong.src.split(`Songs/${currfolder}/`)[1])
         if ((index - 1) >= 0) {
             playMusic(songs[index - 1])
         }
     })
 
     next.addEventListener("click", () => {
-        let index = songs.indexOf(currentSong.src.split(`/Songs/${currfolder}/`)[1])
+        let index = songs.indexOf(currentSong.src.split(`Songs/${currfolder}/`)[1])
         if ((index + 1) < songs.length) {
             playMusic(songs[index + 1])
         }
@@ -236,7 +236,7 @@ function updatePlayIcons(currentTrack) {
 }
 
 function seekbar() {
-    let index = songs.indexOf(currentSong.src.split(`/Songs/${currfolder}/`)[1])  
+    let index = songs.indexOf(currentSong.src.split(`Songs/${currfolder}/`)[1])  
     if ((index + 1) < songs.length) {
         playMusic(songs[index + 1])
     }
