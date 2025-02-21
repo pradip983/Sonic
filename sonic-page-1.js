@@ -48,7 +48,7 @@ const playMusic = (track, pause = false) => {
     currentSong.src = `Songs/${currfolder}/` + track
     if (pause != true) {
         currentSong.play();
-        play.src = "/image/pause.svg"
+        play.src = "/pause.svg"
     }
     document.querySelector(".songinfo-1").innerHTML = decodeURI(track)
     document.querySelector(".duration").innerHTML = "00:00/00:00";
@@ -73,7 +73,7 @@ async function displayalbums() {
                 cardcontainer.innerHTML = cardcontainer.innerHTML + `
                     <div data-folder="${Folder}" class="card">
                         <div class="play">
-                            <img src="/image/play-button.svg" alt="">
+                            <img src="/play-button.svg" alt="">
                         </div>
                         <img src="Songs/${Folder}/cover.jpg" alt="">
                         <h4>${response.title}</h4>
@@ -108,7 +108,7 @@ function populateSongList() {
             <div class="musicbox">
                 <div class="songicon invert">
                     <div>
-                        <img src="/image/music.svg" alt="">
+                        <img src="/music.svg" alt="">
                     </div>
                 </div>
                 <div class="songinfo">
@@ -116,7 +116,7 @@ function populateSongList() {
                 </div>
                 <div class="playnow ">
                     <span>play now</span>
-                    <span><img src="/image/play.svg" class="invert1" alt=""></span>
+                    <span><img src="/play.svg" class="invert1" alt=""></span>
                 </div>
             </div>
         </li>`;
@@ -131,7 +131,7 @@ function attachAlbumSelectEvent() {
             playMusic(songs[0], true);
             populateSongList();
             attachSongListEvent();
-            document.getElementById("play").src = "/image/play.svg";
+            document.getElementById("play").src = "/play.svg";
             document.querySelector(".circle").style.left = "0%";
             updatePlayIcons(songs[0]);
         })
@@ -154,10 +154,10 @@ function attachPlaybackControlEvents() {
     play.addEventListener("click", () => {
         if (currentSong.paused) {
             currentSong.play();
-            play.src = "/image/pause.svg"
+            play.src = "/pause.svg"
         } else {
             currentSong.pause();
-            play.src = "/image/play.svg"
+            play.src = "/play.svg"
         }
     })
 
@@ -191,22 +191,22 @@ function attachPlaybackControlEvents() {
 
     document.querySelector(".volume").getElementsByTagName("input")[0].addEventListener("change", (e) => {
         if (e.target.value / 100 == 0) {
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-off.svg"
+            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/volume-off.svg"
             currentSong.volume = 0;
         } else {
             currentSong.volume = (e.target.value / 100);
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-on.svg"
+            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/volume-on.svg"
         }
     })
 
     document.querySelector(".volume").getElementsByTagName("img")[0].addEventListener("click", (e) => {
-        if (document.querySelector(".volume").getElementsByTagName("img").vo.src.split("/image/")[1] == "volume-on.svg") {
+        if (document.querySelector(".volume").getElementsByTagName("img").vo.src.split("/")[1] == "volume-on.svg") {
             currentSong.volume = 0;
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-off.svg"
+            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/volume-off.svg"
             document.querySelector(".range").getElementsByTagName("input")[0].value = 0;
         } else {
             currentSong.volume = 0.1;
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-on.svg"
+            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/volume-on.svg"
             document.querySelector(".range").getElementsByTagName("input")[0].value = 10;
         }
     })
@@ -228,9 +228,9 @@ function updatePlayIcons(currentTrack) {
     songListItems.forEach(item => {
         let playIcon = item.querySelector(".playnow img");
         if (item.querySelector(".songinfo div").textContent.trim() === decodeURI(currentTrack)) {
-            playIcon.src = "/image/pause.svg";
+            playIcon.src = "/pause.svg";
         } else {
-            playIcon.src = "/image/play.svg";
+            playIcon.src = "/play.svg";
         }
     });
 }
