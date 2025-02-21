@@ -1,10 +1,5 @@
 {
-  "routes": [
-    {
-      "src": "/Songs/(.*)",
-      "dest": "/Songs/$1"
-    }
-  ],
+ 
   "headers": [
     {
       "source": "/Songs/:path*",
