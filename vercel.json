@@ -1,7 +1,7 @@
 {
     "headers": [
       {
-        "source": "Songs/:path*",
+        "source": "/Songs/:path*",
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
