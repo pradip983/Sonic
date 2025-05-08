@@ -23,7 +23,7 @@ function secondsToMinutes(seconds) {
 async function getSongs(folder) {
     currfolder = folder;
     try {
-        let a = await fetch(`https://sonic-uj6p.vercel.app/${folder}`)
+        let a = await fetch(`Songs/${folder}`)
         let response = await a.text();
         let div = document.createElement("div")
         div.innerHTML = response;
@@ -57,7 +57,7 @@ const playMusic = (track, pause = false) => {
 
 async function displayalbums() {
     try {
-        let a = await fetch(`https://sonic-uj6p.vercel.app/`);
+        let a = await fetch(`Songs/`);
         let response = await a.text();
         console.log(response);
         let div = document.createElement("div")
@@ -68,7 +68,7 @@ async function displayalbums() {
             const e = anchor[i];
             if (e.href.includes("Songs/")) {
                 let Folder = e.href.split("Songs/")[1];
-                let a = await fetch(`https://sonic-uj6p.vercel.app/${Folder}/zinfo.json`);
+                let a = await fetch(`Songs/${Folder}/zinfo.json`);
                 let response = await a.json();
                 cardcontainer.innerHTML = cardcontainer.innerHTML + `
                     <div data-folder="${Folder}" class="card">
