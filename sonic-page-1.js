@@ -49,7 +49,7 @@ const playMusic = (track, pause = false) => {
 let folders = ["cs", "dp", "jp", "kp", "lp", "mp", "ncs", "sp"]; // Add all folder names here
 
 async function displayalbums() {
-  let container = document.querySelector(".song-container");
+  let container = document.querySelector(".card-container");
 
   for (let folder of folders) {
     let zinfoPath = `Songs/${folder}/zinfo.json`;
