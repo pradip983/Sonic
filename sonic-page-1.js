@@ -46,7 +46,7 @@ const playMusic = (track, pause = false) => {
     updatePlayIcons(track);
 }
 
-let folders = ["ap","cs","jp", "lp", "ncs",]; // Add all folder names here
+let folders = ["ap","jp", "lp",]; // Add all folder names here
 
 async function displayalbums() {
   let container = document.querySelector(".card-container"); // Adjusted for your HTML
@@ -89,7 +89,7 @@ async function displayalbums() {
 
 async function main() {
     await displayalbums();
-    songs = await getSongs("ncs");
+    songs = await getSongs("lp");
     playMusic(songs[0], true);
     populateSongList();
     updatePlayIcons(songs[0]);
