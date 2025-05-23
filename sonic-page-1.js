@@ -49,7 +49,7 @@ const playMusic = (track, pause = false) => {
 let folders = ["cs", "dp", "jp", "kp", "lp", "mp", "ncs", "sp"]; // Add all folder names here
 
 async function displayalbums() {
-  let container = document.querySelector(".card-container");
+  let container = document.querySelector(".card-container"); // Adjusted for your HTML
 
   for (let folder of folders) {
     let zinfoPath = `Songs/${folder}/zinfo.json`;
@@ -57,16 +57,20 @@ async function displayalbums() {
 
     try {
       let response = await fetch(zinfoPath);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
       let info = await response.json();
 
       let card = document.createElement("div");
-      card.className = "song-card";
+      card.className = "card"; // Re-using your CSS class from original code
+      card.setAttribute("data-folder", folder);
       card.innerHTML = `
-        <a href="song.html?album=${folder}">
-          <img src="${coverPath}" class="song-img" />
-          <div class="song-title">${info.title}</div>
-          <div class="song-description">${info.description}</div>
-        </a>
+        <div class="play">
+            <img src="/image/play-button.svg" alt="">
+        </div>
+        <img src="${coverPath}" alt="">
+        <h4>${info.title}</h4>
+        <p>${info.description}</p>
       `;
 
       container.appendChild(card);
@@ -74,7 +78,13 @@ async function displayalbums() {
       console.error(`Failed to load album "${folder}":`, error);
     }
   }
+
+  // Optional: attach any event listeners after loading
+  if (typeof attachAlbumSelectEvent === 'function') {
+    attachAlbumSelectEvent();
+  }
 }
+
 
 
 async function main() {
