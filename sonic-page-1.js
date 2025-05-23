@@ -46,7 +46,7 @@ const playMusic = (track, pause = false) => {
     updatePlayIcons(track);
 }
 
-let folders = ["cs", "dp", "jp", "kp", "lp", "mp", "ncs", "sp"]; // Add all folder names here
+let folders = ["ap","cs", "dp", "jp", "kp", "lp", "mp", "ncs", "sp"]; // Add all folder names here
 
 async function displayalbums() {
   let container = document.querySelector(".card-container"); // Adjusted for your HTML
