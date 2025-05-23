@@ -46,38 +46,36 @@ const playMusic = (track, pause = false) => {
     updatePlayIcons(track);
 }
 
+let folders = ["cs", "dp", "jp", "kp", "lp", "mp", "ncs", "sp"]; // Add all folder names here
+
 async function displayalbums() {
+  let container = document.querySelector(".song-container");
+
+  for (let folder of folders) {
+    let zinfoPath = `Songs/${folder}/zinfo.json`;
+    let coverPath = `Songs/${folder}/cover.jpg`;
+
     try {
-        let a = await fetch(`Songs/`);
-        let response = await a.text();
-        console.log(response);
-        let div = document.createElement("div")
-        div.innerHTML = response;
-        let anchor = div.getElementsByTagName("a")
-        let cardcontainer = document.querySelector(".card-container");
-        for (let i = 0; i < anchor.length; i++) {
-            const e = anchor[i];
-            if (e.href.includes("Songs/")) {
-                let Folder = e.href.split("Songs/")[1];
-                let a = await fetch(`Songs/${Folder}/zinfo.json`);
-                let response = await a.json();
-                cardcontainer.innerHTML = cardcontainer.innerHTML + `
-                    <div data-folder="${Folder}" class="card">
-                        <div class="play">
-                            <img src="/image/play-button.svg" alt="">
-                        </div>
-                        <img src="Songs/${Folder}/cover.jpg" alt="">
-                        <h4>${response.title}</h4>
-                        <p>${response.description}</p>
-                    </div>`
-            }
-        }
-        console.log("Albums displayed.");  // Debugging
-        attachAlbumSelectEvent();
+      let response = await fetch(zinfoPath);
+      let info = await response.json();
+
+      let card = document.createElement("div");
+      card.className = "song-card";
+      card.innerHTML = `
+        <a href="song.html?album=${folder}">
+          <img src="${coverPath}" class="song-img" />
+          <div class="song-title">${info.title}</div>
+          <div class="song-description">${info.description}</div>
+        </a>
+      `;
+
+      container.appendChild(card);
     } catch (error) {
-        console.error("Error displaying albums:", error);
+      console.error(`Failed to load album "${folder}":`, error);
     }
+  }
 }
+
 
 async function main() {
     await displayalbums();
