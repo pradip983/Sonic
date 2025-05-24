@@ -168,11 +168,21 @@ function attachPlaybackControlEvents() {
         }
     })
 
-    document.querySelector(".seekbar").addEventListener("click", e => {
-        let percent = (e.offsetX / e.target.getBoundingClientRect().width) * 100;
-        document.querySelector(".circle").style.left = percent + "%";
-        currentSong.currentTime = ((currentSong.duration) * percent) / 100
-    })
+   document.querySelector(".seekbar").addEventListener("click", e => {
+    if (!currentSong || !currentSong.duration || isNaN(currentSong.duration)) {
+        console.warn("No song loaded or song duration not available.");
+        return;
+    }
+
+    const seekbar = e.currentTarget;
+    const clickX = e.offsetX;
+    const width = seekbar.getBoundingClientRect().width;
+    const percent = Math.min((clickX / width) * 100, 100);
+
+    document.querySelector(".circle").style.left = percent + "%";
+    currentSong.currentTime = (currentSong.duration * percent) / 100;
+});
+
 
    pre.addEventListener("click", () => {
     const songName = decodeURIComponent(currentSong.src).split(`/Songs/${currfolder}/`).pop();
@@ -253,10 +263,15 @@ function updatePlayIcons(currentTrack) {
 }
 
 function seekbar() {
-    let index = songs.indexOf(currentSong.src.split(`Songs/${currfolder}/`)[1])  
-    if ((index + 1) < songs.length) {
-        playMusic(songs[index + 1])
+    const songName = decodeURIComponent(currentSong.src.split("/").pop().trim());
+    const index = songs.indexOf(songName);
+
+    if (index !== -1 && (index + 1) < songs.length) {
+        playMusic(songs[index + 1]);
+    } else {
+        console.log("No more songs to play or song not found.");
     }
 }
+
 
 main();
