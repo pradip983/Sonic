@@ -32,19 +32,35 @@ async function getSongs(folder) {
 
 const playMusic = (track, pause = false) => {
     const trackPath = `Songs/${currfolder}/${track}`;
+    console.log("Requested track:", track);
+    console.log("Current folder:", currfolder);
+    console.log("Full track path:", trackPath);
+    console.log("Current song source:", currentSong.src);
 
-    if (currentSong.src !== location.origin + "/" + trackPath) {
+    // Only update src if it's a different track
+    if (!currentSong.src.includes(trackPath)) {
+        console.log("Setting new source and updating UI");
         currentSong.src = trackPath;
-        document.querySelector(".songinfo-1").innerHTML = decodeURI(track);
-        document.querySelector(".duration").innerHTML = "00:00/00:00";
+        document.querySelector(".songinfo-1").textContent = decodeURI(track);
+        document.querySelector(".duration").textContent = "00:00/00:00";
         updatePlayIcons(track);
+    } else {
+        console.log("Track already set. Skipping source update.");
     }
 
+    // Play the song if not paused
     if (!pause) {
-        currentSong.play();
-        play.src = "/image/pause.svg";
+        currentSong.play().then(() => {
+            console.log("Playback started.");
+            play.src = "/image/pause.svg";
+        }).catch(error => {
+            console.error("Playback failed:", error);
+        });
+    } else {
+        console.log("Pause flag is true. Not playing.");
     }
 };
+
 
 let folders = ["ap", "jp", "lp"]; // Add all folder names here
 
