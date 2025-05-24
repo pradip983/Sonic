@@ -206,6 +206,8 @@ function attachPlaybackControlEvents() {
 
 
     document.querySelector(".seekbar").addEventListener("click", (e) => {
+        e.stopPropagation();
+        
     if (!currentSong || isNaN(currentSong.duration)) {
         console.warn("Seekbar clicked but no valid song or duration available.");
         return;
