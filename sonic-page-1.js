@@ -174,19 +174,37 @@ function attachPlaybackControlEvents() {
         currentSong.currentTime = ((currentSong.duration) * percent) / 100
     })
 
-    pre.addEventListener("click", () => {
-        let index = songs.indexOf(currentSong.src.split(`Songs/${currfolder}/`)[1])
-        if ((index - 1) >= 0) {
-            playMusic(songs[index - 1])
-        }
-    })
+   pre.addEventListener("click", () => {
+    const songName = decodeURIComponent(currentSong.src).split(`/Songs/${currfolder}/`).pop();
+    const index = songs.indexOf(songName.trim());
 
-    next.addEventListener("click", () => {
-        let index = songs.indexOf(currentSong.src.split(`Songs/${currfolder}/`)[1])
-        if ((index + 1) < songs.length) {
-            playMusic(songs[index + 1])
-        }
-    })
+    console.log("Current Song:", songName);
+    console.log("Index:", index);
+
+    if (index > 0) {
+        playMusic(songs[index - 1]);
+    } else {
+        console.log("Already at the first song or song not found.");
+    }
+});
+
+
+   next.addEventListener("click", () => {
+    // Get only the file name from the full URL
+    const songName = decodeURIComponent(currentSong.src.split("/").pop().trim());
+    
+    const index = songs.indexOf(songName);
+
+    console.log("Current song:", songName);
+    console.log("Index:", index);
+
+    if (index !== -1 && index + 1 < songs.length) {
+        playMusic(songs[index + 1]);
+    } else {
+        console.log("Already at last song or song not found.");
+    }
+});
+
 
     document.querySelector(".volume").getElementsByTagName("input")[0].addEventListener("change", (e) => {
         if (e.target.value / 100 == 0) {
