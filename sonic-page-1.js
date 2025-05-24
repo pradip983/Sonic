@@ -35,16 +35,21 @@ async function getSongs(folder) {
 
 
 const playMusic = (track, pause = false) => {
-    console.log("Playing music:", track);  // Debugging
-    currentSong.src = `Songs/${currfolder}/` + track
-    if (pause != true) {
-        currentSong.play();
-        play.src = "/image/pause.svg"
+    const trackPath = `Songs/${currfolder}/` + track;
+
+    if (currentSong.src !== location.origin + "/" + trackPath) {
+        currentSong.src = trackPath;
+        document.querySelector(".songinfo-1").innerHTML = decodeURI(track);
+        document.querySelector(".duration").innerHTML = "00:00/00:00";
+        updatePlayIcons(track);
     }
-    document.querySelector(".songinfo-1").innerHTML = decodeURI(track)
-    document.querySelector(".duration").innerHTML = "00:00/00:00";
-    updatePlayIcons(track);
-}
+
+    if (!pause) {
+        currentSong.play();
+        play.src = "/image/pause.svg";
+    }
+};
+
 
 let folders = ["ap","jp", "lp",]; // Add all folder names here
 
@@ -193,18 +198,19 @@ function attachPlaybackControlEvents() {
     });
 
     // Click-to-Seek
-    document.querySelector(".seekbar").addEventListener("click", (e) => {
-        if (!currentSong || isNaN(currentSong.duration)) return;
+  document.querySelector(".seekbar").addEventListener("click", (e) => {
+    if (!currentSong || isNaN(currentSong.duration)) return;
 
-        const seekbar = e.currentTarget;
-        const clickX = e.offsetX;
-        const width = seekbar.getBoundingClientRect().width;
-        const percent = Math.min((clickX / width) * 100, 100);
-        const newTime = (currentSong.duration * percent) / 100;
+    const seekbar = e.currentTarget;
+    const clickX = e.offsetX;
+    const width = seekbar.getBoundingClientRect().width;
+    const percent = Math.min((clickX / width) * 100, 100);
+    const newTime = (currentSong.duration * percent) / 100;
 
-        document.querySelector(".circle").style.left = percent + "%";
-        currentSong.currentTime = newTime;
-    });
+    document.querySelector(".circle").style.left = percent + "%";
+    currentSong.currentTime = newTime;
+});
+
 
     // Previous Song
     pre.addEventListener("click", playPreviousSong);
