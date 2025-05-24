@@ -30,25 +30,22 @@ async function getSongs(folder) {
     }
 }
 
+
 const playMusic = (track, pause = false) => {
     const trackPath = `Songs/${currfolder}/${track}`;
-    console.log("Requested track:", track);
-    console.log("Current folder:", currfolder);
-    console.log("Full track path:", trackPath);
-    console.log("Current song source:", currentSong.src);
+    const currentSrc = decodeURIComponent(currentSong.src);
 
-    // Only update src if it's a different track
-    if (!currentSong.src.includes(trackPath)) {
+    // Avoid resetting if same track
+    if (!currentSrc.includes(trackPath)) {
         console.log("Setting new source and updating UI");
         currentSong.src = trackPath;
         document.querySelector(".songinfo-1").textContent = decodeURI(track);
         document.querySelector(".duration").textContent = "00:00/00:00";
         updatePlayIcons(track);
     } else {
-        console.log("Track already set. Skipping source update.");
+        console.log("Same track - not resetting src");
     }
 
-    // Play the song if not paused
     if (!pause) {
         currentSong.play().then(() => {
             console.log("Playback started.");
@@ -56,10 +53,10 @@ const playMusic = (track, pause = false) => {
         }).catch(error => {
             console.error("Playback failed:", error);
         });
-    } else {
-        console.log("Pause flag is true. Not playing.");
     }
 };
+
+   
 
 
 let folders = ["ap", "jp", "lp"]; // Add all folder names here
@@ -206,7 +203,9 @@ function attachPlaybackControlEvents() {
         }
     });
 
-   document.querySelector(".seekbar").addEventListener("click", (e) => {
+
+
+    document.querySelector(".seekbar").addEventListener("click", (e) => {
     if (!currentSong || isNaN(currentSong.duration)) {
         console.warn("Seekbar clicked but no valid song or duration available.");
         return;
@@ -227,13 +226,14 @@ function attachPlaybackControlEvents() {
     console.log(`Seekbar clicked at ${clickX}px / ${width}px (${percent.toFixed(2)}%)`);
     console.log(`Setting song time to: ${newTime.toFixed(2)}s of ${currentSong.duration.toFixed(2)}s`);
 
-    // Update UI
+    currentSong.currentTime = newTime;
+
     const circle = document.querySelector(".circle");
     circle.style.left = percent + "%";
-
-    // Set new song time
-    currentSong.currentTime = newTime;
 });
+
+
+   
 
 
     pre.addEventListener("click", playPreviousSong);
