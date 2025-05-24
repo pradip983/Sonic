@@ -190,18 +190,35 @@ function attachPlaybackControlEvents() {
         }
     });
 
-    document.querySelector(".seekbar").addEventListener("click", (e) => {
-        if (!currentSong || isNaN(currentSong.duration)) return;
+   document.querySelector(".seekbar").addEventListener("click", (e) => {
+    if (!currentSong || isNaN(currentSong.duration)) {
+        console.warn("Seekbar clicked but no valid song or duration available.");
+        return;
+    }
 
-        const seekbar = e.currentTarget;
-        const clickX = e.offsetX;
-        const width = seekbar.getBoundingClientRect().width;
-        const percent = Math.min((clickX / width) * 100, 100);
-        const newTime = (currentSong.duration * percent) / 100;
+    const seekbar = e.currentTarget;
+    const clickX = e.offsetX;
+    const width = seekbar.getBoundingClientRect().width;
 
-        document.querySelector(".circle").style.left = percent + "%";
-        currentSong.currentTime = newTime;
-    });
+    if (width === 0) {
+        console.warn("Seekbar width is 0 — cannot calculate seek position.");
+        return;
+    }
+
+    const percent = Math.max(0, Math.min((clickX / width) * 100, 100));
+    const newTime = (currentSong.duration * percent) / 100;
+
+    console.log(`Seekbar clicked at ${clickX}px / ${width}px (${percent.toFixed(2)}%)`);
+    console.log(`Setting song time to: ${newTime.toFixed(2)}s of ${currentSong.duration.toFixed(2)}s`);
+
+    // Update UI
+    const circle = document.querySelector(".circle");
+    circle.style.left = percent + "%";
+
+    // Set new song time
+    currentSong.currentTime = newTime;
+});
+
 
     pre.addEventListener("click", playPreviousSong);
     next.addEventListener("click", playNextSong);
