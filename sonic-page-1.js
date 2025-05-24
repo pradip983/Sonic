@@ -149,106 +149,105 @@ function attachSongListEvent() {
     }
 }
 
+function playNextSong() {
+    const songName = decodeURIComponent(currentSong.src.split("/").pop().trim());
+    const index = songs.indexOf(songName);
+    if (index + 1 < songs.length) {
+        playMusic(songs[index + 1]);
+    }
+}
+
+function playPreviousSong() {
+    const songName = decodeURIComponent(currentSong.src.split("/").pop().trim());
+    const index = songs.indexOf(songName);
+    if (index > 0) {
+        playMusic(songs[index - 1]);
+    }
+}
+
 function attachPlaybackControlEvents() {
+    // Toggle Play/Pause
     play.addEventListener("click", () => {
         if (currentSong.paused) {
             currentSong.play();
-            play.src = "/image/pause.svg"
+            play.src = "/image/pause.svg";
         } else {
             currentSong.pause();
-            play.src = "/image/play.svg"
+            play.src = "/image/play.svg";
         }
-    })
+    });
 
-    currentSong.addEventListener("timeupdate", async () => {
-        document.querySelector(".duration").innerHTML = `${secondsToMinutes(currentSong.currentTime)}/${secondsToMinutes(currentSong.duration)}`
-        left = document.querySelector(".circle").style.left = (currentSong.currentTime / currentSong.duration) * 100 + "%";
-        if (currentSong.currentTime >= currentSong.duration) { 
-            await seekbar();
+    // Time Update and Seekbar Progress
+    currentSong.addEventListener("timeupdate", () => {
+        const current = currentSong.currentTime;
+        const duration = currentSong.duration;
+
+        if (!isNaN(duration)) {
+            document.querySelector(".duration").innerHTML = `${secondsToMinutes(current)}/${secondsToMinutes(duration)}`;
+            document.querySelector(".circle").style.left = (current / duration) * 100 + "%";
         }
-    })
 
-   document.querySelector(".seekbar").addEventListener("click", e => {
-    if (!currentSong || !currentSong.duration || isNaN(currentSong.duration)) {
-        console.warn("No song loaded or song duration not available.");
-        return;
-    }
+        if (current >= duration) {
+            playNextSong();
+        }
+    });
 
-    const seekbar = e.currentTarget;
-    const clickX = e.offsetX;
-    const width = seekbar.getBoundingClientRect().width;
-    const percent = Math.min((clickX / width) * 100, 100);
+    // Click-to-Seek
+    document.querySelector(".seekbar").addEventListener("click", (e) => {
+        if (!currentSong || isNaN(currentSong.duration)) return;
 
-    document.querySelector(".circle").style.left = percent + "%";
-    currentSong.currentTime = (currentSong.duration * percent) / 100;
-});
+        const seekbar = e.currentTarget;
+        const clickX = e.offsetX;
+        const width = seekbar.getBoundingClientRect().width;
+        const percent = Math.min((clickX / width) * 100, 100);
+        const newTime = (currentSong.duration * percent) / 100;
 
+        document.querySelector(".circle").style.left = percent + "%";
+        currentSong.currentTime = newTime;
+    });
 
-   pre.addEventListener("click", () => {
-    const songName = decodeURIComponent(currentSong.src).split(`/Songs/${currfolder}/`).pop();
-    const index = songs.indexOf(songName.trim());
+    // Previous Song
+    pre.addEventListener("click", playPreviousSong);
 
-    console.log("Current Song:", songName);
-    console.log("Index:", index);
+    // Next Song
+    next.addEventListener("click", playNextSong);
 
-    if (index > 0) {
-        playMusic(songs[index - 1]);
-    } else {
-        console.log("Already at the first song or song not found.");
-    }
-});
+    // Volume Slider
+    document.querySelector(".volume input").addEventListener("change", (e) => {
+        const volumeValue = e.target.value / 100;
+        currentSong.volume = volumeValue;
 
+        const volumeIcon = document.querySelector(".volume img");
+        volumeIcon.src = volumeValue === 0 ? "/image/volume-off.svg" : "/image/volume-on.svg";
+    });
 
-   next.addEventListener("click", () => {
-    // Get only the file name from the full URL
-    const songName = decodeURIComponent(currentSong.src.split("/").pop().trim());
-    
-    const index = songs.indexOf(songName);
+    // Volume Icon Click (Mute/Unmute)
+    document.querySelector(".volume img").addEventListener("click", () => {
+        const volumeIcon = document.querySelector(".volume img");
+        const rangeInput = document.querySelector(".range input");
 
-    console.log("Current song:", songName);
-    console.log("Index:", index);
-
-    if (index !== -1 && index + 1 < songs.length) {
-        playMusic(songs[index + 1]);
-    } else {
-        console.log("Already at last song or song not found.");
-    }
-});
-
-
-    document.querySelector(".volume").getElementsByTagName("input")[0].addEventListener("change", (e) => {
-        if (e.target.value / 100 == 0) {
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-off.svg"
+        if (volumeIcon.src.includes("volume-on.svg")) {
             currentSong.volume = 0;
-        } else {
-            currentSong.volume = (e.target.value / 100);
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-on.svg"
-        }
-    })
-
-    document.querySelector(".volume").getElementsByTagName("img")[0].addEventListener("click", (e) => {
-        if (document.querySelector(".volume").getElementsByTagName("img").vo.src.split("/image/")[1] == "volume-on.svg") {
-            currentSong.volume = 0;
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-off.svg"
-            document.querySelector(".range").getElementsByTagName("input")[0].value = 0;
+            volumeIcon.src = "/image/volume-off.svg";
+            rangeInput.value = 0;
         } else {
             currentSong.volume = 0.1;
-            document.querySelector(".volume").getElementsByTagName("img").vo.src = "/image/volume-on.svg"
-            document.querySelector(".range").getElementsByTagName("input")[0].value = 10;
+            volumeIcon.src = "/image/volume-on.svg";
+            rangeInput.value = 10;
         }
-    })
-     // event for hamburger
-    document.querySelector(".hamburger").addEventListener("click", () =>{
-         document.querySelector(".left").style.left = 0 + "%";
-        //  document.querySelector(".playbar").style.display = "none";
-    })
-     // event for cross
-     document.querySelector(".cross").addEventListener("click", ()=>{
-        document.querySelector(".left").style.left = -100 + "%";
-        // document.querySelector(".playbar").style.display = "flex";
-     })
-    
+    });
+
+    // Hamburger Menu
+    document.querySelector(".hamburger").addEventListener("click", () => {
+        document.querySelector(".left").style.left = "0%";
+    });
+
+    // Close Menu (Cross)
+    document.querySelector(".cross").addEventListener("click", () => {
+        document.querySelector(".left").style.left = "-100%";
+    });
 }
+
 
 function updatePlayIcons(currentTrack) {
     let songListItems = document.querySelectorAll(".songList li");
